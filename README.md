@@ -1,6 +1,6 @@
 # Dashboard API BFF
 
-## To-do list
+## Checklist
 
 - [x] Base server with GET `dashboard/:id` endpoint.
 - [ ] Client, external data source: `/users/:id`
@@ -9,12 +9,13 @@
 - [ ] Test client `user`
 - [ ] Test client `todo`
 - [ ] **Fetch calls in parallel.**
-- [ ] Business logic, full name (first + last).
-- [ ] Business logic, age > 50 with status Veteran, otherwise Rookie.
-- [ ] Business logic, count of pending tasks.
-- [ ] Business logic, title of the first pending task.
-- [ ] Business logic, filter todos completed.
-- [ ] Business logic, partial failure handling with warning.
+- [x] Business rule, full name (first + last).
+- [x] Business rule, age > 50 with status Veteran, otherwise Rookie.
+- [ ] Business rule, count of pending tasks.
+- [x] Business rule, title of the first pending task.
+- [x] Business rule, filter todos completed.
+- [ ] Business rule, partial failure handling with warning.
+- [ ] Test and validate business rules (QA).
 - [ ] Unit tests.
 - [ ] README.
 - [ ] GIT.
