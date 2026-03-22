@@ -1,9 +1,11 @@
 package main
 
 import (
+	"bff-dashboard-api/internal"
 	"log"
 	"net/http"
 	"os"
+	"time"
 )
 
 func main() {
@@ -12,10 +14,13 @@ func main() {
 		addr = ":" + addr
 	}
 
+	httpClient := &http.Client{Timeout: 2 * time.Second}
+	dummyClient := internal.NewDummyJSONClient(httpClient, "https://dummyjson.com")
+	dashboardService := internal.NewDashboardService(dummyClient)
+	dashboardHandler := internal.NewDashboardHandler(dashboardService)
+
 	mux := http.NewServeMux()
-	mux.HandleFunc("GET /dashboard/", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("ok"))
-	})
+	mux.Handle("GET /dashboard/", dashboardHandler)
 
 	log.Printf("bff-dashboard-api listening on %s", addr)
 	if err := http.ListenAndServe(addr, mux); err != nil {
