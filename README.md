@@ -2,7 +2,7 @@
 
 ## To-do list
 
-- [ ] Base server with GET `dashboard/:id` endpoint.
+- [x] Base server with GET `dashboard/:id` endpoint.
 - [ ] Client, external data source: `/users/:id`
 - [ ] Client, external data source: `/todos/user/:id`
 - [ ] Client, strict 2 seconds timeout.
