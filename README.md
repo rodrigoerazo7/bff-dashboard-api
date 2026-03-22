@@ -15,7 +15,7 @@
 - [x] Business rule, title of the first pending task.
 - [x] Business rule, filter todos completed.
 - [ ] Business rule, partial failure handling with warning.
-- [ ] Test and validate business rules (QA).
+- [x] Test and validate business rules (QA).
 - [ ] Unit tests.
 - [ ] README.
 - [ ] GIT.
