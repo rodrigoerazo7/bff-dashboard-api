@@ -1,5 +1,49 @@
 # Dashboard API BFF
 
+A Backend for Frontend (BFF) REST API built in Go that aggregates user profile and todo data
+from [DummyJSON](https://dummyjson.com) into a single dashboard endpoint.
+Handles concurrent requests and partial failures resiliently as specified.
+
+| Package    | File               | Purpose                                            |
+|------------|--------------------|----------------------------------------------------|
+| `main`     | `config.go`        | Loads configuration from environment variables.    |
+|            | `main.go`          | Wires dependencies and starts the server.          |
+| `domain`   | `user.go`          | User domain logic/rules.                           |
+|            | `user_test.go`     | Unit tests for User.                               |
+|            | `todo.go`          | Todo domain logic/rules.                           |
+|            | `todo_test.go`     | Unit tests for Todo.                               |
+| `response` | `response.go`      | Aggregates user and todos into dashboard response. |
+|            | `response_test.go` | Unit tests for DashboardResponse.                  |
+| `internal` | `client.go`        | HTTP client for DummyJSON API.                     |
+|            | `service.go`       | Fetches user and todos concurrently.               |
+|            | `handler.go`       | Handles HTTP request and writes JSON response.     |
+
+## How to run the application
+
+```shell
+# run with default config
+go run ./cmd/api
+
+# build and run (osx|linux)
+go build -o bff-dashboard-api ./cmd/api && ./bff-dashboard-api
+
+# build and run (powershell)
+go build -o bff-dashboard-api.exe ./cmd/api; ./bff-dashboard-api.exe
+
+# run with custom config (osx|linux)
+DUMMYJSON_BASE_URL=https://dummyjson.com DASHBOARD_TIMEOUT=2s go run ./cmd/api
+
+# run with custom config (powershell)
+$env:DUMMYJSON_BASE_URL="https://dummyjson.com"; $env:DASHBOARD_TIMEOUT="2s"; go run ./cmd/api
+```
+
+## External Data Sources
+
+1. User Profile: https://dummyjson.com/users/:id
+2. User Todos: https://dummyjson.com/todos/user/:id
+3. User ids: 1, 2, 3, 4, 5, 6, 7, 8.
+
+<!--
 ## Checklist
 
 - [x] Base server with GET `dashboard/:id` endpoint.
@@ -16,9 +60,9 @@
 - [x] Business rule, filter todos completed.
 - [x] Business rule, partial failure handling with warning.
 - [x] Test and validate business rules (QA).
-- [ ] Unit tests.
-- [ ] README.
-- [ ] GIT.
+- [x] Unit tests.
+- [x] README.
+- [x] GIT.
 
 ### Expected output
 
@@ -32,9 +76,4 @@
   "error_warning": null
 }
 ```
-
-## External Data Sources
-
-1. User Profile: https://dummyjson.com/users/:id
-2. User Todos: https://dummyjson.com/todos/user/:id
-3. User ids: 1, 2, 3, 4, 5, 6, 7, 8.
+-->
