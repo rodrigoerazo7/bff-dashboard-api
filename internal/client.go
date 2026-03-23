@@ -38,10 +38,9 @@ type DummyJSONClient struct {
 	baseURL    string
 }
 
-func NewDummyJSONClient(httpClient *http.Client, baseURL string) *DummyJSONClient {
-	httpClient.Timeout = 2 * time.Second
+func NewDummyJSONClient(baseURL string, timeout time.Duration) *DummyJSONClient {
 	return &DummyJSONClient{
-		httpClient: httpClient,
+		httpClient: &http.Client{Timeout: timeout},
 		baseURL:    strings.TrimRight(baseURL, "/"),
 	}
 }
