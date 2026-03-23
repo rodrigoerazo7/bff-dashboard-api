@@ -37,11 +37,56 @@ DUMMYJSON_BASE_URL=https://dummyjson.com DASHBOARD_TIMEOUT=2s go run ./cmd/api
 $env:DUMMYJSON_BASE_URL="https://dummyjson.com"; $env:DASHBOARD_TIMEOUT="2s"; go run ./cmd/api
 ```
 
+## How to test the application
+
+```shell
+curl http://localhost:8080/dashboard/8
+```
+
+**Sample response with all data available:**
+
+```json
+{
+  "id": 8,
+  "full_name": "Ava Taylor",
+  "status": "Rookie",
+  "pending_task_count": 1,
+  "next_urgent_task": "Take a scenic horseback riding tour",
+  "error_warning": null
+}
+```
+
+**Sample response with partial failure handling simulation:**
+
+```json
+{
+  "id": 8,
+  "full_name": "Ava Taylor",
+  "status": "Rookie",
+  "pending_task_count": 0,
+  "next_urgent_task": null,
+  "error_warning": "Todos Unavailable"
+}
+```
+
+> The simulated delay is controlled by the current second at execution time.
+> Todos endpoint adds a 3000ms delay when `second < 30 && second % 3 == 0`,
+> triggering the 2s timeout and returning `"Todos Unavailable"`.
+
+## How to run the tests
+
+```shell
+# run all tests
+go test ./...
+
+# run all tests with verbose output
+go test -v ./...
+```
+
 ## External Data Sources
 
 1. User Profile: https://dummyjson.com/users/:id
 2. User Todos: https://dummyjson.com/todos/user/:id
-3. User ids: 1, 2, 3, 4, 5, 6, 7, 8.
 
 <!--
 ## Checklist
