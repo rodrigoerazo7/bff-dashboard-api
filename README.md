@@ -2,7 +2,7 @@
 
 A Backend for Frontend (BFF) REST API built in Go that aggregates user profile and todo data
 from [DummyJSON](https://dummyjson.com) into a single dashboard endpoint.
-Handles concurrent requests and partial failures resiliently as specified.
+Built as a technical assessment.
 
 | Package    | File               | Purpose                                            |
 |------------|--------------------|----------------------------------------------------|
