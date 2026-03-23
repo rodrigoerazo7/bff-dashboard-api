@@ -13,7 +13,7 @@ Built as a technical assessment.
 |            | `todo.go`          | Todo domain logic/rules.                           |
 |            | `todo_test.go`     | Unit tests for Todo.                               |
 | `response` | `response.go`      | Aggregates user and todos into dashboard response. |
-|            | `response_test.go` | Unit tests for DashboardResponse.                  |
+|            | `response_test.go` | Unit tests for dashboard aggregation logic.        |
 | `internal` | `client.go`        | HTTP client for DummyJSON API.                     |
 |            | `service.go`       | Fetches user and todos concurrently.               |
 |            | `handler.go`       | Handles HTTP request and writes JSON response.     |
