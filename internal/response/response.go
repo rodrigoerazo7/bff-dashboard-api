@@ -1,4 +1,4 @@
-package internal
+package response
 
 import "bff-dashboard-api/internal/domain"
 

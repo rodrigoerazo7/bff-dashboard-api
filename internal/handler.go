@@ -2,8 +2,10 @@ package internal
 
 import (
 	"bff-dashboard-api/internal/domain"
+	"bff-dashboard-api/internal/response"
 	"context"
 	"encoding/json"
+	"log/slog"
 	"net/http"
 	"strconv"
 	"strings"
@@ -28,9 +30,15 @@ func (h *DashboardHTTPHandler) ServeHTTP(w http.ResponseWriter, r *http.Request)
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	user, todos, todosErr := h.service.BuildDashboard(r.Context(), id)
-	resp := NewDashboardResponse(user, todos, todosErr)
 
+	user, todos, err := h.service.BuildDashboard(r.Context(), id)
+	if user.ID == 0 {
+		slog.Error("failed to fetch user", "id", id, "err", err)
+		w.WriteHeader(http.StatusBadGateway)
+		return
+	}
+
+	resp := response.NewDashboardResponse(user, todos, err)
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(resp)
 }

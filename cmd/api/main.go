@@ -3,6 +3,7 @@ package main
 import (
 	"bff-dashboard-api/internal"
 	"log"
+	"log/slog"
 	"net/http"
 	"os"
 	"time"
@@ -22,7 +23,7 @@ func main() {
 	mux := http.NewServeMux()
 	mux.Handle("GET /dashboard/", dashboardHandler)
 
-	log.Printf("bff-dashboard-api listening on %s", addr)
+	slog.Info("bff-dashboard-api listening", "addr", addr)
 	if err := http.ListenAndServe(addr, mux); err != nil {
 		log.Fatal(err)
 	}

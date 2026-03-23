@@ -3,7 +3,6 @@ package internal
 import (
 	"bff-dashboard-api/internal/domain"
 	"context"
-	"fmt"
 	"sync"
 )
 
@@ -38,7 +37,7 @@ func (s *DashboardService) BuildDashboard(ctx context.Context, id int) (domain.U
 	wg.Wait()
 
 	if userErr != nil {
-		return domain.User{}, nil, fmt.Errorf("fetch user: %w", userErr)
+		return domain.User{}, nil, userErr
 	}
 
 	return user, todos, todosErr

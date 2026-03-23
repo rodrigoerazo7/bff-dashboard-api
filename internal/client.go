@@ -6,8 +6,10 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"log/slog"
 	"net/http"
 	"strings"
+	"time"
 )
 
 type DashboardDataClient interface {
@@ -37,6 +39,7 @@ type DummyJSONClient struct {
 }
 
 func NewDummyJSONClient(httpClient *http.Client, baseURL string) *DummyJSONClient {
+	httpClient.Timeout = 2 * time.Second
 	return &DummyJSONClient{
 		httpClient: httpClient,
 		baseURL:    strings.TrimRight(baseURL, "/"),
@@ -45,20 +48,39 @@ func NewDummyJSONClient(httpClient *http.Client, baseURL string) *DummyJSONClien
 
 func (c *DummyJSONClient) GetUser(ctx context.Context, id int) (domain.User, error) {
 	var env userEnvelope
-	if err := c.getJSON(ctx, fmt.Sprintf("%s/users/%d", c.baseURL, id), &env); err != nil {
+	url := fmt.Sprintf("%s/users/%d", c.baseURL, id)
+	if delay, second := simulatedDelay("GetUser"); delay > 0 {
+		url += fmt.Sprintf("?delay=%d", delay)
+		slog.Info("GetUser: simulating delay", "delay_ms", delay, "second", second)
+	} else {
+		slog.Info("GetUser: no delay", "second", second)
+	}
+
+	if err := c.getJSON(ctx, url, &env); err != nil {
 		return domain.User{}, fmt.Errorf("GetUser %d: %w", id, err)
 	}
-	return domain.User{
+
+	user := domain.User{
 		ID:        env.ID,
 		FirstName: env.FirstName,
 		LastName:  env.LastName,
 		Age:       env.Age,
-	}, nil
+	}
+	slog.Info("GetUser result", "user", user)
+	return user, nil
 }
 
 func (c *DummyJSONClient) GetTodos(ctx context.Context, id int) (domain.TodoList, error) {
 	var env todosEnvelope
-	if err := c.getJSON(ctx, fmt.Sprintf("%s/todos/user/%d?delay=3000", c.baseURL, id), &env); err != nil {
+	url := fmt.Sprintf("%s/todos/user/%d", c.baseURL, id)
+	if delay, second := simulatedDelay("GetTodos"); delay > 0 {
+		url += fmt.Sprintf("?delay=%d", delay)
+		slog.Info("GetTodos: simulating delay", "delay_ms", delay, "second", second)
+	} else {
+		slog.Info("GetTodos: no delay", "second", second)
+	}
+
+	if err := c.getJSON(ctx, url, &env); err != nil {
 		return nil, fmt.Errorf("GetTodos %d: %w", id, err)
 	}
 
@@ -71,6 +93,7 @@ func (c *DummyJSONClient) GetTodos(ctx context.Context, id int) (domain.TodoList
 			UserID:    t.UserID,
 		})
 	}
+	slog.Info("GetTodos result", "count", len(todos), "todos", todos)
 	return todos, nil
 }
 
@@ -96,4 +119,19 @@ func (c *DummyJSONClient) getJSON(ctx context.Context, url string, target any) e
 	}
 
 	return nil
+}
+
+func simulatedDelay(caller string) (int, int) {
+	second := time.Now().Second()
+	switch caller {
+	case "GetUser":
+		if second > 30 && second%3 == 0 {
+			return 3000, second
+		}
+	case "GetTodos":
+		if second < 30 && second%3 == 0 {
+			return 3000, second
+		}
+	}
+	return 0, second
 }
